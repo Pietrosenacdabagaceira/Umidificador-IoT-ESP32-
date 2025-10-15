@@ -1,0 +1,261 @@
+/* Reset e base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #222;
+  background-color: #fff;
+  line-height: 1.6;
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Tipografia */
+h1 {
+  font-family: "Georgia", "Times New Roman", serif;
+  font-weight: normal;
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.5px;
+}
+
+h2 {
+  font-family: "Georgia", "Times New Roman", serif;
+  font-weight: normal;
+  font-size: 1.4rem;
+  margin: 1.8rem 0 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid #eee;
+}
+
+h3 {
+  font-size: 1.15rem;
+  margin: 1.4rem 0 0.8rem;
+  font-weight: 600;
+}
+
+p, li {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+ul, ol {
+  padding-left: 1.4rem;
+  margin-bottom: 1.2rem;
+}
+
+li {
+  margin-bottom: 0.6rem;
+}
+
+code {
+  font-family: "Menlo", "Consolas", monospace;
+  background-color: #f8f8f8;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.95em;
+  color: #d14;
+}
+
+/* Layout */
+header {
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #555;
+  font-style: italic;
+}
+
+.container {
+  margin-bottom: 2.5rem;
+}
+
+.card {
+  margin-bottom: 2rem;
+}
+
+/* Destaques */
+.note, .tip {
+  background-color: #f9f9f9;
+  border-left: 3px solid #aaa;
+  padding: 1rem 1.2rem;
+  margin: 1.2rem 0;
+  font-size: 0.95rem;
+}
+
+.note strong, .tip strong {
+  font-weight: 600;
+}
+
+/* Galeria de fotos do protótipo */
+.prototype-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+/* Galeria de fotos do Tasmota */
+.tasmota-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+/* Galeria de fotos do Home Assistant */
+.ha-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+/* Estilo comum para figuras */
+.prototype-gallery figure,
+.tasmota-gallery figure,
+.ha-gallery figure {
+  margin: 0;
+  text-align: center;
+}
+
+.prototype-gallery img,
+.tasmota-gallery img,
+.ha-gallery img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.prototype-gallery figcaption,
+.tasmota-gallery figcaption,
+.ha-gallery figcaption {
+  font-size: 0.9rem;
+  color: #777;
+  margin-top: 0.5rem;
+  line-height: 1.4;
+}
+
+/* Simulador */
+.simulator-section {
+  margin-top: 1.5rem;
+}
+
+#humiditySlider {
+  width: 100%;
+  margin: 1rem 0;
+  height: 6px;
+  -webkit-appearance: none;
+  background: #e0e0e0;
+  border-radius: 3px;
+  outline: none;
+}
+
+#humiditySlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #555;
+  cursor: pointer;
+}
+
+.humidity-display {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin: 1.2rem 0;
+}
+
+.humidity-bar {
+  flex: 1;
+  height: 20px;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.humidity-fill {
+  height: 100%;
+  background-color: #555;
+  transition: width 0.4s ease;
+}
+
+.humidity-value {
+  width: 60px;
+  text-align: right;
+  font-weight: bold;
+}
+
+.humidity-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.85rem;
+  color: white;
+  font-weight: bold;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+}
+
+.status {
+  text-align: center;
+  padding: 0.6rem;
+  font-weight: 600;
+  background-color: #f8f8f8;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  margin-top: 0.8rem;
+}
+
+.caption {
+  font-size: 0.9rem;
+  color: #777;
+  text-align: center;
+  margin-top: 0.8rem;
+}
+
+/* Rodapé */
+footer {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eee;
+  color: #777;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+/* Impressão */
+@media print {
+  body {
+    padding: 1rem;
+    max-width: none;
+  }
+  header, footer {
+    border: none;
+  }
+  .simulator-section {
+    display: none;
+  }
+  .prototype-gallery,
+  .tasmota-gallery,
+  .ha-gallery {
+    grid-template-columns: 1fr;
+  }
+}

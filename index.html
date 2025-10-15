@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Umidificador IoT (ESP32)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Umidificador IoT (ESP32)</h1>
+    <p class="subtitle">Sistema inteligente para controle automático de umidade em ambientes internos</p>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Objetivo Técnico</h2>
+      <p>
+        Este projeto implementa um sistema de controle com histerese para manter a umidade relativa do ar na faixa ideal para conforto respiratório: entre 30% e 60%.
+      </p>
+      <ul>
+        <li>Se a umidade for menor que 30%, o sistema liga o umidificador.</li>
+        <li>Se a umidade for maior que 60%, o sistema desliga o umidificador.</li>
+        <li>Se a umidade estiver entre 30% e 60%, o sistema não executa nenhuma ação, mantendo o estado atual do umidificador.</li>
+      </ul>
+      <p>
+        Essa abordagem evita oscilações indesejadas (ligar/desligar repetido) causadas por pequenas variações normais do sensor, garantindo estabilidade, economia de energia e maior vida útil do equipamento.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Montagem Física com ESP32</h2>
+      <ul>
+        <li>Sensor DHT11
+          <ul>
+            <li>VCC → 3.3V do ESP32</li>
+            <li>GND → GND do ESP32</li>
+            <li>DATA → GPIO13</li>
+          </ul>
+        </li>
+        <li>Módulo relé (1 canal)
+          <ul>
+            <li>IN → GPIO14</li>
+            <li>VCC → 5V ou 3.3V</li>
+            <li>GND → GND</li>
+          </ul>
+        </li>
+        <li>LED de simulação
+          <ul>
+            <li>Anodo → saída NO do relé</li>
+            <li>Catodo → GND via resistor de 220 ohms</li>
+          </ul>
+        </li>
+      </ul>
+
+      <div class="note">
+        <strong>Por que o resistor de 220 ohms no LED?</strong><br>
+        LEDs típicos suportam correntes de até 20mA. Sem resistor, a corrente excede esse limite, causando queima imediata. O resistor limita a corrente com segurança.
+      </div>
+
+      <div class="note">
+        <strong>Por que o pull-up no DHT11?</strong><br>
+        O pino DATA do DHT11 precisa de um resistor de 4,7k ohms entre ele e o 3.3V para evitar sinal instável. Módulos comerciais já incluem esse resistor.
+      </div>
+
+      <!-- Fotos do protótipo -->
+      <div class="prototype-gallery">
+        <figure>
+          <img src="./imagens/montagem-1.jpg.jpg" alt="Montagem geral do circuito com ESP32, relé e LED">
+          <figcaption>Figura 1: Visão geral do protótipo montado em protoboard.</figcaption>
+        </figure>
+
+        <figure>
+          <img src="./imagens/monatgem-2.jpg.jpg" alt="Detalhe do módulo relé e conexões">
+          <figcaption>Figura 2: Detalhe do módulo relé v2.3 e conexões com o LED.</figcaption>
+        </figure>
+
+        <figure>
+          <img src="./imagens/montagem-3.jpg.jpg" alt="Visão superior do circuito completo">
+          <figcaption>Figura 3: Visão superior do circuito completo, mostrando ESP32, DHT11 e relé.</figcaption>
+        </figure>
+
+        <figure>
+          <img src="./imagens/montagem-4.jpg.jpg" alt="Montagem lateral com teclado ao fundo">
+          <figcaption>Figura 4: Montagem lateral, evidenciando a integração com o ambiente de trabalho.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Configuração do Tasmota</h2>
+      <p>
+        O firmware Tasmota foi configurado para:
+      </p>
+      <ul>
+        <li>Ler o sensor DHT11 conectado à GPIO13</li>
+        <li>Controlar o relé conectado à GPIO14</li>
+        <li>Publicar os dados no broker MQTT</li>
+      </ul>
+
+      <!-- Fotos da configuração do Tasmota -->
+      <div class="tasmota-gallery">
+        <figure>
+          <img src="./imagens/tasmota-mqtt-config.jpg.png" alt="Configuração MQTT no Tasmota">
+          <figcaption>Figura 5: Configuração dos parâmetros MQTT (host, porta, usuário, senha).</figcaption>
+        </figure>
+
+        <figure>
+          <img src="./imagens/tasmota-gpio-config.jpg.png" alt="Mapeamento dos GPIOs no Tasmota">
+          <figcaption>Figura 6: Mapeamento dos GPIOs: GPIO13 = DHT11, GPIO14 = Relay.</figcaption>
+        </figure>
+
+        <figure>
+          <img src="./imagens/tasmota-interface.jpg.png" alt="Interface principal do Tasmota com leitura do sensor">
+          <figcaption>Figura 7: Interface principal do Tasmota exibindo temperatura e umidade em tempo real.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Integração com Home Assistant</h2>
+      <p>
+        O sistema utiliza duas automações no Home Assistant para controlar o estado do umidificador com base na leitura do sensor de umidade.
+      </p>
+
+      <h3>Automação 1: Ligar Umidificador</h3>
+      <ul>
+        <li><strong>Gatilho:</strong> umidade relativa do ar abaixo de 30%</li>
+        <li><strong>Ação:</strong> ligar o interruptor do umidificador</li>
+      </ul>
+
+      <h3>Automação 2: Desligar Umidificador</h3>
+      <ul>
+        <li><strong>Gatilho:</strong> umidade relativa do ar acima de 60%</li>
+        <li><strong>Ação:</strong> desligar o interruptor do umidificador</li>
+      </ul>
+
+      <div class="tip">
+        <strong>Comportamento com histerese</strong><br>
+        Essa configuração implementa uma lógica de histerese: o umidificador permanece ligado após atingir a faixa ideal (30–60%) e só é desligado quando a umidade ultrapassa 60%. Da mesma forma, só é religado quando a umidade cai abaixo de 30%. Isso evita ciclos curtos e garante estabilidade.
+      </div>
+
+      <!-- Fotos do Home Assistant -->
+      <div class="ha-gallery">
+        <figure>
+          <img src="./imagens/ha-automacoes-lista.png" alt="Lista de automações no Home Assistant">
+          <figcaption>Figura 8: Lista de automações configuradas no Home Assistant.</figcaption>
+        </figure>
+
+        <figure>
+          <img src="./imagens/ha-automacao-ligar.jpg.png" alt="Configuração da automação de ligar">
+          <figcaption>Figura 9: Configuração da automação para ligar o umidificador quando a umidade está abaixo de 30%.</figcaption>
+        </figure>
+
+        <figure>
+          <img src="./imagens/ha-automacao-desligar.jpg (2).png" alt="Configuração da automação de desligar">
+          <figcaption>Figura 10: Configuração da automação para desligar o umidificador quando a umidade está acima de 60%.</figcaption>
+        </figure>
+
+        <figure>
+          <img src="./imagens/ha-mqtt-broker.jpg.png" alt="Configuração do MQTT broker no Home Assistant">
+          <figcaption>Figura 11: Broker MQTT configurado no Home Assistant.</figcaption>
+        </figure>
+
+        <figure>
+          <img src="./imagens/ha-tasmota-integracao.jpg.png" alt="Integração Tasmota no Home Assistant">
+          <figcaption>Figura 12: Integração do dispositivo Tasmota no Home Assistant.</figcaption>
+        </figure>
+
+        <figure>
+          <img src="./imagens/ha-configuracoes-overview.jpg.png" alt="Visão geral das configurações no Home Assistant">
+          <figcaption>Figura 13: Visão geral das integrações configuradas no Home Assistant.</figcaption>
+        </figure>
+
+        <figure>
+          <img src="./imagens/ha-dispositivo-detalhes.jpg.png" alt="Detalhes do dispositivo Tasmota no Home Assistant">
+          <figcaption>Figura 14: Detalhes do dispositivo Tasmota, mostrando sensores, controles e atividade.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="card simulator-section">
+      <h2>Simulador Interativo de Histerese</h2>
+      <p>Arraste o controle para simular diferentes níveis de umidade:</p>
+      <input type="range" id="humiditySlider" min="10" max="90" value="45" />
+      <div class="humidity-display">
+        <div class="humidity-value" id="humidityValue">45%</div>
+        <div class="humidity-bar">
+          <div class="humidity-fill" id="humidityFill"></div>
+          <div class="humidity-label">30–60%</div>
+        </div>
+      </div>
+      <div class="status" id="statusBox">Umidificador: <span id="statusText">Desligado</span></div>
+      <p class="caption">
+        Entre 30% e 60%, o sistema não altera o estado atual. O simulador inicia com o umidificador desligado.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <p>Projeto técnico — Umidificador IoT com ESP32, DHT11 e Home Assistant</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
